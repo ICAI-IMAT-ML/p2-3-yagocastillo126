@@ -1,4 +1,6 @@
 # Laboratory 2.3: Linear Regression
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/GrsVzzaf)
+
 
 In this practice, you will implement and evaluate a linear regression model in `src/lab_2_3_LinearRegression.py`. Tasks:
 
