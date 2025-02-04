@@ -1,38 +1,21 @@
-# Laboratory 2.2: kNN and Evaluating Classification Models
+# Laboratory 2.3: Linear Regression
 
-## Description
+In this practice, you will implement and evaluate a linear regression model in `src/lab_2_3_LinearRegression.py`. Tasks:
 
-In this laboratory practice, you will implement and evaluate a k-Nearest Neighbors (kNN) classification model. You will work on the following tasks:
-
-0. **Setup**:
-   - Clone the repository and install the required packages.
-   - Copy the `train.dat` and `test.dat` files from previous practices.
-
-1. **Minkowski Distance Calculation**:
-   - Implement the `minkowski_distance` function to compute distances between data points.
-
-2. **k-Nearest Neighbors Model**:
-   - Implement the `knn` class with the following methods:
-     - `fit`: Fit the model using training data.
-     - `predict`: Predict class labels for the provided data.
-     - `predict_proba`: Predict class probabilities for the provided data.
-     - `compute_distances`: Compute distances from a point to every point in the training dataset.
-     - `get_k_nearest_neighbors`: Get the k nearest neighbors indices given the distances matrix from a point.
-     - `most_common_label`: Obtain the most common label from the labels of the k nearest neighbors.
-
-3. **Model Evaluation**:
-   - Implement the `evaluate_classification_metrics` function to calculate various evaluation metrics for a classification model.
-   - Implement the following plotting functions:
-     - `plot_2Dmodel_predictions`: Plot the classification results and predicted probabilities of a model on a 2D grid.
-     - `plot_calibration_curve`: Plot a calibration curve to evaluate the accuracy of predicted probabilities.
-     - `plot_probability_histograms`: Plot probability histograms for the positive and negative classes separately.
-     - `plot_roc_curve`: Plot the Receiver Operating Characteristic (ROC) curve.
+1. **LinearRegressor Class**  
+   - Implement `fit_simple` and `fit_multiple`  
+   - Implement `predict`  
+2. **Evaluation**  
+   - Implement `evaluate_regression` to obtain R², RMSE, and MAE  
+   - Implement `sklearn_comparison` to compare your model with scikit-learn’s  
+   - Implement `anscombe_quartet` to test your model on Anscombe’s datasets  
+   - Implement the rest of evaluation functions.
+3. **Notebook**  
+   - In `notebook/Lab_2_3_LinearRegression.ipynb`, answer the question about your results.
 
 ## Uploading Changes to GitHub
 
-To upload your changes to GitHub and have them automatically evaluated using the provided tests, follow these steps:
-
-1. **Stage Your Changes**:
+1. **Stage Changes**:
    ```sh
    git add .
     ```
