@@ -34,10 +34,17 @@ class LinearRegressor:
         """
         if np.ndim(X) > 1:
             X = X.reshape(1, -1)
+        
+        y_mean = np.mean(y)
+        x_mean = np.mean(X)
 
-        # TODO: Train linear regression model with only one coefficient
-        self.coefficients = None
-        self.intercept = None
+        # Calculamos el valor de 'w' ideal derivando la función de error
+        beta = sum((X - x_mean) * (y - y_mean)) / sum((X - x_mean)**2)
+
+
+        #Train linear regression model with only one coefficient
+        self.coefficients = beta
+        self.intercept = y_mean - self.coefficients * x_mean
 
     # This part of the model you will only need for the last part of the notebook
     def fit_multiple(self, X, y):
@@ -54,9 +61,15 @@ class LinearRegressor:
         Returns:
             None: Modifies the model's coefficients and intercept in-place.
         """
-        # TODO: Train linear regression model with multiple coefficients
-        self.intercept = None
-        self.coefficients = None
+        #Train linear regression model with multiple coefficients
+
+        # Agrega una columna de unos a X para el término de intercepción (b0)
+        X_b = np.c_[np.ones((X.shape[0], 1)), X]
+        # Calcula los coeficientes óptimos usando la ecuación normal
+        beta = np.linalg.inv(X_b.T @ X_b) @ X_b.T @ y
+        # Extrae el término de intercepción y los coeficientes
+        self.intercept = beta[0]
+        self.coefficients = beta[1:]
 
     def predict(self, X):
         """
@@ -75,11 +88,12 @@ class LinearRegressor:
             raise ValueError("Model is not yet fitted")
 
         if np.ndim(X) == 1:
-            # TODO: Predict when X is only one variable
-            predictions = None
+            # Predict when X is only one variable
+            predictions = self.intercept + np.dot(self.coefficients, X)
         else:
-            # TODO: Predict when X is more than one variable
-            predictions = None
+            # Predict when X is more than one variable
+            X_b = np.c_[np.ones((X.shape[0], 1)), X]
+            predictions = np.dot(X_b, np.r_[self.intercept, self.coefficients])
         return predictions
 
 
@@ -95,16 +109,18 @@ def evaluate_regression(y_true, y_pred):
         dict: A dictionary containing the R^2, RMSE, and MAE values.
     """
     # R^2 Score
-    # TODO: Calculate R^2
-    r_squared = None
+    # Calculate R^2
+    ss_total = (np.sum((y_true - y_pred) ** 2))
+    ss_residual = (np.sum((y_true - np.mean(y_true)) ** 2))
+    r_squared = 1 - (ss_total/ss_residual)
 
     # Root Mean Squared Error
-    # TODO: Calculate RMSE
-    rmse = None
+    # Calculate RMSE
+    rmse = np.sqrt((np.sum((y_true - y_pred)**2)/len(y_true)))
 
     # Mean Absolute Error
-    # TODO: Calculate MAE
-    mae = None
+    # Calculate MAE
+    mae = (np.sum(abs(y_true - y_pred))/len(y_true))
 
     return {"R2": r_squared, "RMSE": rmse, "MAE": mae}
 
@@ -114,15 +130,15 @@ def evaluate_regression(y_true, y_pred):
 
 def sklearn_comparison(x, y, linreg):
     ### Compare your model with sklearn linear regression model
-    # TODO : Import Linear regression from sklearn
-
+    # Import Linear regression from sklearn
+    from sklearn.linear_model import LinearRegression
     # Assuming your data is stored in x and y
-    # TODO : Reshape x to be a 2D array, as scikit-learn expects 2D inputs for the features
-    x_reshaped = None
+    # Reshape x to be a 2D array, as scikit-learn expects 2D inputs for the features
+    x_reshaped = x.reshape(-1, 1)
 
     # Create and train the scikit-learn model
-    # TODO : Train the LinearRegression model
-    sklearn_model = None
+    # Train the LinearRegression model
+    sklearn_model = LinearRegression()
     sklearn_model.fit(x_reshaped, y)
 
     # Now, you can compare coefficients and intercepts between your model and scikit-learn's model
@@ -143,30 +159,27 @@ def anscombe_quartet():
     anscombe = sns.load_dataset("anscombe")
 
     # Anscombe's quartet consists of four datasets
-    # TODO: Construct an array that contains, for each entry, the identifier of each dataset
-    datasets = None
+    # Construct an array that contains, for each entry, the identifier of each dataset
+    datasets = anscombe["dataset"].unique()
 
     models = {}
     results = {"R2": [], "RMSE": [], "MAE": []}
     for dataset in datasets:
 
         # Filter the data for the current dataset
-        # TODO
-        data = None
+
+        data = anscombe[anscombe["dataset"] == dataset]
 
         # Create a linear regression model
-        # TODO
-        model = None
+        model = LinearRegressor()
 
         # Fit the model
-        # TODO
-        X = None  # Predictor, make it 1D for your custom model
-        y = None  # Response
+        X = data['x'].values  # Predictor, make it 1D for your custom model
+        y = data['y'].values  # Response
         model.fit_simple(X, y)
 
         # Create predictions for dataset
-        # TODO
-        y_pred = None
+        y_pred = model.predict(X)
 
         # Store the model for later use
         models[dataset] = model
@@ -185,7 +198,7 @@ def anscombe_quartet():
         results["R2"].append(evaluation_metrics["R2"])
         results["RMSE"].append(evaluation_metrics["RMSE"])
         results["MAE"].append(evaluation_metrics["MAE"])
-    return results
+    return anscombe, datasets, models, results
 
 
 # Go to the notebook to visualize the results
